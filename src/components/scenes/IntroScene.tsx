@@ -42,7 +42,7 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
     if (onEnvelopeOpen) onEnvelopeOpen();
 
     setTimeout(() => {
-      // Fire confetti celebration!
+      // Confetti celebration
       confetti({
         particleCount: 50,
         spread: 60,
@@ -170,7 +170,7 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
       <div className="absolute top-4.5 left-6 md:top-6 md:left-14 text-[9px] md:text-[10px] tracking-[0.25em] text-text-ink/55 uppercase font-bold font-sans flex items-center gap-1 select-none pointer-events-none z-10">
         <span>{memoriesConfig.intro.headerBadge}</span>
         <span className="text-accent-pink">♡</span>
-        <span>BY {memoriesConfig.sender.title}</span>
+        <span>{memoriesConfig.person.fullName.toUpperCase()}</span>
       </div>
 
       {/* Center Bird Banner */}

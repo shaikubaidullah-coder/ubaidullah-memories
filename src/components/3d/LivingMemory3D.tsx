@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
@@ -18,13 +18,28 @@ export const LivingMemory3D: React.FC<LivingMemory3DProps> = ({
 }) => {
   const photoRef = useRef<THREE.Group>(null);
   const candleLightRef = useRef<THREE.PointLight>(null);
-  const textureLoader = useRef(new THREE.TextureLoader());
-  const [texture, setTexture] = React.useState<THREE.Texture | null>(null);
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
 
-  React.useEffect(() => {
-    textureLoader.current.load(heroPhotoSrc, (t) => {
-      setTexture(t);
-    });
+  useEffect(() => {
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      heroPhotoSrc,
+      (t) => {
+        t.colorSpace = THREE.SRGBColorSpace;
+        setTexture(t);
+      },
+      undefined,
+      () => {
+        // Fallback to alternate extension
+        const alt = heroPhotoSrc.endsWith('.jpg')
+          ? heroPhotoSrc.replace('.jpg', '.png')
+          : heroPhotoSrc.replace('.png', '.jpg');
+        loader.load(alt, (t) => {
+          t.colorSpace = THREE.SRGBColorSpace;
+          setTexture(t);
+        });
+      }
+    );
   }, [heroPhotoSrc]);
 
   useFrame((state) => {

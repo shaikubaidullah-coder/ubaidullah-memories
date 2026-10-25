@@ -29,6 +29,7 @@ export const PolaroidCard: React.FC<PolaroidCardProps> = ({
   onClick,
 }) => {
   const [isZoomed, setIsZoomed] = useState(false);
+  const [imgSrc, setImgSrc] = useState(src);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -87,12 +88,20 @@ export const PolaroidCard: React.FC<PolaroidCardProps> = ({
         <div className="relative aspect-square w-full bg-zinc-100 overflow-hidden border border-zinc-200/60 rounded-xs mb-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={src}
+            src={imgSrc}
             alt={caption}
+            onError={() => {
+              // Try alternate extension (.png <-> .jpg)
+              if (imgSrc.endsWith('.jpg')) {
+                setImgSrc(imgSrc.replace('.jpg', '.png'));
+              } else if (imgSrc.endsWith('.png')) {
+                setImgSrc(imgSrc.replace('.png', '.jpg'));
+              }
+            }}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             draggable={false}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/5 opacity-40 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/5 opacity-30 pointer-events-none" />
         </div>
 
         <div className="flex flex-col gap-1 text-center px-1">
@@ -123,7 +132,7 @@ export const PolaroidCard: React.FC<PolaroidCardProps> = ({
           >
             <div className="relative aspect-square w-full bg-zinc-100 overflow-hidden rounded-xs mb-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt={caption} className="w-full h-full object-cover" />
+              <img src={imgSrc} alt={caption} className="w-full h-full object-cover" />
             </div>
             <p className="font-handwritten text-lg text-center text-text-ink font-bold">{caption}</p>
             <p className="text-center font-sans text-xs uppercase tracking-widest text-text-ink/50 mt-1">{date}</p>
