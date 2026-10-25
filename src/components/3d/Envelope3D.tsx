@@ -31,6 +31,7 @@ export const Envelope3D: React.FC<Envelope3DProps> = ({
   const isDraggingEnvelope = useRef(false);
   const envelopeRotOffset = useRef<[number, number]>([0, 0]);
   const envelopeDragStart = useRef({ x: 0, y: 0 });
+  const envelopeDragDistance = useRef(0);
 
   const baseColor = useMemo(() => new THREE.Color(accentColor), [accentColor]);
   const lightColor = useMemo(() => baseColor.clone().multiplyScalar(1.06), [baseColor]);
@@ -101,6 +102,7 @@ export const Envelope3D: React.FC<Envelope3DProps> = ({
         if (!isOpen) {
           e.stopPropagation();
           isDraggingEnvelope.current = true;
+          envelopeDragDistance.current = 0;
           envelopeDragStart.current = { x: e.clientX, y: e.clientY };
           (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
           document.body.style.cursor = 'grabbing';
@@ -111,6 +113,7 @@ export const Envelope3D: React.FC<Envelope3DProps> = ({
         e.stopPropagation();
         const dx = e.clientX - envelopeDragStart.current.x;
         const dy = e.clientY - envelopeDragStart.current.y;
+        envelopeDragDistance.current += Math.abs(dx) + Math.abs(dy);
         envelopeRotOffset.current[0] += dy * 0.005;
         envelopeRotOffset.current[1] += dx * 0.005;
         envelopeRotOffset.current[0] = Math.max(-0.15, Math.min(0.15, envelopeRotOffset.current[0]));
@@ -123,6 +126,10 @@ export const Envelope3D: React.FC<Envelope3DProps> = ({
           isDraggingEnvelope.current = false;
           (e.target as HTMLElement).releasePointerCapture?.(e.pointerId);
           document.body.style.cursor = 'grab';
+          // If it was a quick click rather than a drag, open envelope!
+          if (envelopeDragDistance.current < 8) {
+            onOpenTrigger();
+          }
         }
       }}
       onPointerOver={() => {

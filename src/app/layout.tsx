@@ -20,6 +20,16 @@ const architectsDaughter = Architects_Daughter({
 export const metadata: Metadata = {
   title: memoriesConfig.meta.title,
   description: memoriesConfig.meta.description,
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

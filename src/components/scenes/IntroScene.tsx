@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -35,7 +35,7 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const triggerOpen = () => {
+  const triggerOpen = useCallback(() => {
     if (isEnvelopeOpen || isProceeding) return;
     setIsEnvelopeOpen(true);
     SoundEngine.playPopClick();
@@ -62,15 +62,44 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
         colors: ['#A2C2E1', '#B4CBB7'],
       });
     }, 800);
-  };
+  }, [isEnvelopeOpen, isProceeding, onEnvelopeOpen]);
 
-  const handleProceed = () => {
+  const handleProceed = useCallback(() => {
+    if (isProceeding) return;
     setIsProceeding(true);
-    setTimeout(() => setIsWhiteFade(true), 400);
+    SoundEngine.playPopClick();
+    setTimeout(() => setIsWhiteFade(true), 350);
     setTimeout(() => {
       onOpenComplete();
-    }, 1100);
-  };
+    }, 1000);
+  }, [isProceeding, onOpenComplete]);
+
+  // Direct enter bypass (skips waiting if user clicks direct enter)
+  const handleDirectEnter = useCallback(() => {
+    if (isProceeding) return;
+    SoundEngine.playPopClick();
+    setIsProceeding(true);
+    setIsWhiteFade(true);
+    setTimeout(() => {
+      onOpenComplete();
+    }, 500);
+  }, [isProceeding, onOpenComplete]);
+
+  // Global Keyboard Listener for Enter and Space
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (!isEnvelopeOpen) {
+          triggerOpen();
+        } else {
+          handleProceed();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isEnvelopeOpen, triggerOpen, handleProceed]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -107,7 +136,7 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
         </Canvas>
       </div>
 
-      {/* Theme Color Picker Button (Top Left) */}
+      {/* Top Left Theme Color Picker */}
       <div className="absolute top-4 left-4 flex items-center pointer-events-auto z-40">
         <button
           onClick={() => {
@@ -149,6 +178,18 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
         </AnimatePresence>
       </div>
 
+      {/* Direct Quick Enter Button (Top Bar) */}
+      <div className="absolute top-4.5 left-16 md:left-20 flex items-center gap-2 z-40 pointer-events-auto">
+        <button
+          onClick={handleDirectEnter}
+          className="px-3 py-1.5 bg-white/80 hover:bg-white text-text-ink/75 hover:text-accent-pink rounded-full border border-text-ink/10 shadow-xs hover:shadow-md text-[10px] md:text-[11px] font-sans font-bold tracking-wider uppercase transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+          title="Skip intro and enter directly"
+        >
+          <span>Enter Directly</span>
+          <span>→</span>
+        </button>
+      </div>
+
       {/* Toast Notification */}
       <div className="absolute top-[20%] inset-x-0 flex justify-center pointer-events-none z-30">
         <AnimatePresence>
@@ -164,13 +205,6 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
-
-      {/* Top Tagline */}
-      <div className="absolute top-4.5 left-6 md:top-6 md:left-14 text-[9px] md:text-[10px] tracking-[0.25em] text-text-ink/55 uppercase font-bold font-sans flex items-center gap-1 select-none pointer-events-none z-10">
-        <span>{memoriesConfig.intro.headerBadge}</span>
-        <span className="text-accent-pink">♡</span>
-        <span>{memoriesConfig.person.fullName.toUpperCase()}</span>
       </div>
 
       {/* Center Bird Banner */}
@@ -228,28 +262,63 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
         </motion.div>
       )}
 
-      {/* Bottom Button to Open Envelope */}
-      <div className="absolute bottom-10 w-full flex flex-col items-center justify-center z-10 pointer-events-none">
-        <AnimatePresence>
-          {!isEnvelopeOpen && (
+      {/* Bottom Action Area with Clear "ENTER" Controls */}
+      <div className="absolute bottom-8 md:bottom-10 w-full flex flex-col items-center justify-center z-30 pointer-events-none px-4">
+        <AnimatePresence mode="wait">
+          {!isEnvelopeOpen ? (
+            /* STATE 1: Envelope is closed — Big Prominent "ENTER SCRAPBOOK" button */
             <motion.div
-              className="w-full flex flex-col items-center gap-3 pointer-events-auto"
-              initial={{ opacity: 0, y: 15 }}
+              key="closed-controls"
+              className="flex flex-col items-center gap-2 pointer-events-auto"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 25, transition: { duration: 0.4 } }}
-              transition={{ duration: 0.6 }}
+              exit={{ opacity: 0, y: -15, transition: { duration: 0.3 } }}
+              transition={{ duration: 0.5 }}
             >
               <motion.button
                 onClick={triggerOpen}
-                className="px-6 py-2.5 bg-white text-text-ink hand-drawn-border font-bold text-xs shadow-sm hover:shadow-md cursor-pointer flex items-center gap-1.5 -rotate-1"
-                whileHover={{ scale: 1.05, y: -2, rotate: 1 }}
-                whileTap={{ scale: 0.96, y: 0 }}
+                className="px-8 py-3.5 bg-white text-text-ink hand-drawn-border font-bold text-sm md:text-base shadow-lg hover:shadow-xl cursor-pointer flex items-center gap-2.5 transition-all text-accent-pink hover:scale-105 active:scale-95 group relative"
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
               >
-                <span>{memoriesConfig.intro.envelopeButtonText}</span>
+                <span className="text-lg">✉️</span>
+                <span className="tracking-wide uppercase font-extrabold font-sans">
+                  {memoriesConfig.intro.envelopeButtonText}
+                </span>
+                <span className="text-sm transition-transform group-hover:translate-x-1">→</span>
               </motion.button>
-              <div className="relative w-full h-4 mt-1 pointer-events-none flex justify-center gap-24">
-                <Doodle type="sparkle" className="w-4 h-4 opacity-40" color="yellow" />
-                <Doodle type="sparkle" className="w-4 h-4 opacity-40" color="green" />
+
+              <div className="flex items-center gap-2 text-[11px] font-sans font-medium text-text-ink/65 tracking-wide bg-white/70 backdrop-blur-xs px-3 py-1 rounded-full border border-text-ink/10 shadow-2xs">
+                <span>✦ Click anywhere on envelope or press <kbd className="px-1.5 py-0.5 bg-zinc-200 text-zinc-800 rounded font-mono font-bold text-[10px]">Enter ↵</kbd></span>
+              </div>
+
+              <div className="relative w-full h-4 mt-0.5 pointer-events-none flex justify-center gap-24">
+                <Doodle type="sparkle" className="w-4 h-4 opacity-50" color="yellow" />
+                <Doodle type="sparkle" className="w-4 h-4 opacity-50" color="green" />
+              </div>
+            </motion.div>
+          ) : (
+            /* STATE 2: Envelope is open — Unmissable glowing "ENTER SCRAPBOOK" CTA */
+            <motion.div
+              key="open-controls"
+              className="flex flex-col items-center gap-2 pointer-events-auto"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
+              <motion.button
+                onClick={handleProceed}
+                className="px-9 py-3.5 bg-accent-pink text-white font-sans font-extrabold text-sm md:text-base rounded-full shadow-xl hover:shadow-2xl cursor-pointer flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 animate-pulse"
+                whileHover={{ scale: 1.06, y: -2 }}
+                whileTap={{ scale: 0.96 }}
+              >
+                <span>ENTER SCRAPBOOK</span>
+                <span className="text-lg">→</span>
+              </motion.button>
+
+              <div className="flex items-center gap-2 text-[11px] font-sans font-medium text-text-ink/70 bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-text-ink/10 shadow-2xs">
+                <span>✦ Press <kbd className="px-1.5 py-0.5 bg-zinc-200 text-zinc-800 rounded font-mono font-bold text-[10px]">Enter ↵</kbd> or click button above to enter</span>
               </div>
             </motion.div>
           )}

@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, RotateCw, Volume2, Music, Sparkles } from 'lucide-react';
+import { Play, Pause, SkipForward, SkipBack, RotateCw, Volume2, Music, Sparkles } from 'lucide-react';
 import { memoriesConfig } from '@/config/memories.config';
 import { SoundEngine } from '@/utils/audio';
+import { useMusic } from '@/context/MusicContext';
 import { WashiTape } from '../WashiTape';
 import { Doodle } from '../Doodles';
 
@@ -14,32 +15,21 @@ interface MixtapeSceneProps {
 }
 
 export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTrackIdx, setCurrentTrackIdx] = useState(0);
+  const {
+    currentSong,
+    currentSongIndex,
+    isPlaying,
+    togglePlay,
+    selectSong,
+    nextSong,
+    prevSong,
+    songs,
+  } = useMusic();
+
   const [isFlipped, setIsFlipped] = useState(false);
   const [activeQuoteIdx, setActiveQuoteIdx] = useState(0);
 
   const { mixtape } = memoriesConfig;
-  const currentTrack = mixtape.tracks[currentTrackIdx];
-
-  const handleTogglePlay = () => {
-    SoundEngine.playPopClick();
-    if (isPlaying) {
-      setIsPlaying(false);
-      SoundEngine.setChannel('off');
-    } else {
-      setIsPlaying(true);
-      SoundEngine.setChannel(currentTrack.channel);
-    }
-  };
-
-  const handleTrackSelect = (idx: number) => {
-    SoundEngine.playPopClick();
-    setCurrentTrackIdx(idx);
-    const track = mixtape.tracks[idx];
-    setIsPlaying(true);
-    SoundEngine.setChannel(track.channel);
-  };
 
   const handleFlipTape = () => {
     SoundEngine.playPaperRustle();
@@ -59,7 +49,7 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
       {/* Header */}
       <div className="w-full max-w-lg text-center mt-2 z-20 pointer-events-none">
         <span className="font-handwritten text-lg text-accent-pink tracking-wider font-extrabold uppercase select-none block mb-1">
-          retro audio vault
+          retro cassette vault
         </span>
         <h1 className="font-handwritten text-3xl md:text-5xl font-black tracking-tight text-text-ink/90">
           {mixtape.title}
@@ -89,7 +79,7 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
               <div className="flex justify-between items-center px-2">
                 <div className="w-3 h-3 rounded-full bg-[#181615] border border-zinc-700" />
                 <div className="text-[10px] font-mono text-zinc-400 font-bold uppercase tracking-widest">
-                  TYPE I • NORMAL BIAS
+                  TYPE I • HI-FI AUDIO
                 </div>
                 <div className="w-3 h-3 rounded-full bg-[#181615] border border-zinc-700" />
               </div>
@@ -112,16 +102,16 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
                     <motion.div
                       className="w-8 h-8 rounded-full border border-dashed border-zinc-400 flex items-center justify-center"
                       animate={isPlaying ? { rotate: 360 } : {}}
-                      transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                      transition={{ duration: 2.8, repeat: Infinity, ease: 'linear' }}
                     >
                       <div className="w-3 h-3 rounded-full bg-zinc-800" />
                     </motion.div>
                   </div>
 
                   {/* Tape level center window */}
-                  <div className="h-6 w-20 bg-zinc-800/80 rounded border border-zinc-600 flex items-center justify-center">
-                    <span className="text-[8px] font-mono text-zinc-400 tracking-wider">
-                      {isPlaying ? 'PLAYING...' : 'STOPPED'}
+                  <div className="h-6 w-24 bg-zinc-800/80 rounded border border-zinc-600 flex items-center justify-center px-2">
+                    <span className="text-[8px] font-mono text-zinc-300 tracking-wider truncate">
+                      {isPlaying ? `PLAYING: ${currentSong.title.toUpperCase()}` : 'STOPPED'}
                     </span>
                   </div>
 
@@ -130,7 +120,7 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
                     <motion.div
                       className="w-8 h-8 rounded-full border border-dashed border-zinc-400 flex items-center justify-center"
                       animate={isPlaying ? { rotate: 360 } : {}}
-                      transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                      transition={{ duration: 2.8, repeat: Infinity, ease: 'linear' }}
                     >
                       <div className="w-3 h-3 rounded-full bg-zinc-800" />
                     </motion.div>
@@ -139,10 +129,15 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
 
                 {/* Handwritten Current Track Name */}
                 <div className="flex justify-between items-center pt-0.5">
-                  <span className="font-handwritten text-xs text-text-ink/80 font-bold truncate max-w-[220px]">
-                    Track: {currentTrack.title}
-                  </span>
-                  <span className="text-[9px] font-mono text-text-ink/50 font-bold">{currentTrack.duration}</span>
+                  <div className="min-w-0 pr-2">
+                    <span className="font-handwritten text-xs text-text-ink/90 font-bold block truncate max-w-[200px]">
+                      {currentSong.title}
+                    </span>
+                    <span className="text-[9px] font-sans text-text-ink/60 block truncate">
+                      {currentSong.artist}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono text-text-ink/50 font-bold shrink-0">{currentSong.duration}</span>
                 </div>
               </div>
 
@@ -169,9 +164,9 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
 
               <div className="bg-[#FAF7F0] rounded-lg p-3 border border-[#DFD8C4] flex flex-col justify-between h-[80%] shadow-inner text-center">
                 <span className="text-[9px] font-mono font-bold bg-accent-yellow/20 text-text-ink px-2 py-0.5 rounded-full self-center">
-                  SIDE B — THE VAULT
+                  SIDE B — PERSONAL VAULT
                 </span>
-                <p className="font-handwritten text-base text-accent-pink font-bold my-auto leading-relaxed">
+                <p className="font-handwritten text-base text-accent-pink font-bold my-auto leading-relaxed px-2">
                   &ldquo;{mixtape.quotes[activeQuoteIdx]}&rdquo;
                 </p>
                 <button
@@ -180,7 +175,7 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
                     SoundEngine.playPopClick();
                     setActiveQuoteIdx((prev) => (prev + 1) % mixtape.quotes.length);
                   }}
-                  className="text-[9px] font-sans font-bold text-text-ink/50 hover:text-text-ink uppercase tracking-wider"
+                  className="text-[9px] font-sans font-bold text-text-ink/50 hover:text-text-ink uppercase tracking-wider cursor-pointer"
                 >
                   [ Next Quote ✨ ]
                 </button>
@@ -200,40 +195,40 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
         {/* Tracklist & Controls Card */}
         <div className="w-full max-w-sm bg-white/90 backdrop-blur-sm border border-[#DFD8C4] rounded-2xl p-5 shadow-lg flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3 border-b border-zinc-100 pb-2">
-            <span className="font-handwritten text-lg font-bold text-text-ink">Tracklist</span>
+            <span className="font-handwritten text-lg font-bold text-text-ink">AUR Playlist</span>
             <span className="text-[9px] font-sans font-bold uppercase tracking-wider text-accent-pink">
-              Procedural Audio
+              Official MP3 Tracks
             </span>
           </div>
 
           {/* Tracks list */}
           <div className="space-y-2 mb-4">
-            {mixtape.tracks.map((track, idx) => (
+            {songs.map((song, idx) => (
               <button
-                key={track.id}
-                onClick={() => handleTrackSelect(idx)}
+                key={song.id}
+                onClick={() => selectSong(idx)}
                 className={`w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-all cursor-pointer ${
-                  currentTrackIdx === idx
+                  currentSongIndex === idx
                     ? 'bg-accent-pink/15 border border-accent-pink/40 shadow-xs'
                     : 'bg-zinc-50 hover:bg-zinc-100 border border-transparent'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2.5 min-w-0 pr-2">
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                      currentTrackIdx === idx ? 'bg-accent-pink text-white' : 'bg-zinc-200 text-zinc-600'
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                      currentSongIndex === idx ? 'bg-accent-pink text-white' : 'bg-zinc-200 text-zinc-600'
                     }`}
                   >
                     {idx + 1}
                   </div>
-                  <div>
-                    <div className="font-sans text-xs font-bold text-text-ink leading-tight">{track.title}</div>
-                    <div className="text-[9px] text-text-ink/50 font-sans">{track.artist}</div>
+                  <div className="min-w-0">
+                    <div className="font-sans text-xs font-bold text-text-ink leading-tight truncate">{song.title}</div>
+                    <div className="text-[9px] text-text-ink/50 font-sans truncate">{song.artist}</div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-[10px] font-mono font-bold text-text-ink/60">{track.duration}</span>
-                  <div className="text-[8px] font-sans font-bold text-accent-pink uppercase">{track.mood}</div>
+                <div className="text-right shrink-0">
+                  <span className="text-[10px] font-mono font-bold text-text-ink/60">{song.duration}</span>
+                  <div className="text-[8px] font-sans font-bold text-accent-pink uppercase">{song.mood}</div>
                 </div>
               </button>
             ))}
@@ -243,7 +238,14 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
           <div className="flex items-center justify-between pt-3 border-t border-zinc-100">
             <div className="flex items-center gap-2">
               <button
-                onClick={handleTogglePlay}
+                onClick={prevSong}
+                className="w-8 h-8 rounded-full border border-zinc-200 hover:bg-zinc-100 flex items-center justify-center text-zinc-700 cursor-pointer active:scale-95"
+                title="Previous Track"
+              >
+                <SkipBack className="w-3.5 h-3.5 fill-current" />
+              </button>
+              <button
+                onClick={togglePlay}
                 className={`px-5 py-2 rounded-full font-sans text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm ${
                   isPlaying ? 'bg-accent-pink text-white hover:bg-accent-pink/90' : 'bg-zinc-800 text-white hover:bg-zinc-700'
                 }`}
@@ -251,11 +253,18 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
                 {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
                 <span>{isPlaying ? 'Pause' : 'Play Track'}</span>
               </button>
+              <button
+                onClick={nextSong}
+                className="w-8 h-8 rounded-full border border-zinc-200 hover:bg-zinc-100 flex items-center justify-center text-zinc-700 cursor-pointer active:scale-95"
+                title="Next Track"
+              >
+                <SkipForward className="w-3.5 h-3.5 fill-current" />
+              </button>
             </div>
 
             <div className="flex items-center gap-1.5 text-text-ink/60">
-              <Volume2 className="w-4 h-4" />
-              <span className="text-[10px] font-mono font-bold uppercase">{currentTrack.channel}</span>
+              <Volume2 className="w-4 h-4 text-accent-pink" />
+              <span className="text-[10px] font-mono font-bold uppercase">{currentSong.duration}</span>
             </div>
           </div>
         </div>
@@ -278,7 +287,7 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
           whileHover={{ scale: 1.03, y: -2 }}
           whileTap={{ scale: 0.97 }}
         >
-          <span>explore our timeline →</span>
+          <span>explore my milestones →</span>
         </motion.button>
       </div>
     </div>

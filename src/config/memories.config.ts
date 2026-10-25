@@ -16,6 +16,15 @@ export interface MilestoneItem {
   quote?: string;
 }
 
+export interface SongItem {
+  id: string;
+  title: string;
+  artist: string;
+  url: string;
+  duration: string;
+  mood: string;
+}
+
 export interface TrackItem {
   id: string;
   title: string;
@@ -23,6 +32,7 @@ export interface TrackItem {
   duration: string;
   mood: string;
   channel: 'lofi' | 'rain' | 'crackle' | 'off';
+  url?: string;
 }
 
 export interface MemoriesConfig {
@@ -40,12 +50,14 @@ export interface MemoriesConfig {
     url: string;
     title: string;
   };
+  songs: SongItem[];
   intro: {
     tagline: string;
     headerBadge: string;
     cardGreeting: string;
     cardSubtext: string;
     envelopeButtonText: string;
+    enterHint?: string;
     letterPreview: {
       salutation: string;
       body: string;
@@ -154,15 +166,50 @@ export const memoriesConfig: MemoriesConfig = {
     bio: "A kind and friendly soul with a practical mind. Believer in quiet consistency, meaningful work, and enjoying life's simple joys.",
   },
   music: {
-    url: "https://archive.org/download/fave2/Ed%20Sheeran%20-%20Shape%20of%20You.mp3",
-    title: 'Play Soundtrack 🎵',
+    url: "/audio/raastah.mp3",
+    title: 'AUR • Raastah 🎵',
   },
+  songs: [
+    {
+      id: "raastah",
+      title: "Raastah",
+      artist: "AUR ft. Taimour Baig",
+      url: "/audio/raastah.mp3",
+      duration: "3:49",
+      mood: "Soulful & Driven",
+    },
+    {
+      id: "us",
+      title: "Us",
+      artist: "AUR",
+      url: "/audio/us.mp3",
+      duration: "4:24",
+      mood: "Deep & Melodic",
+    },
+    {
+      id: "safarnama",
+      title: "Safarnama",
+      artist: "AUR",
+      url: "/audio/safarnama.mp3",
+      duration: "3:44",
+      mood: "Reflective Journey",
+    },
+    {
+      id: "tum-se",
+      title: "Tum Se",
+      artist: "AUR",
+      url: "/audio/tum-se.mp3",
+      duration: "4:43",
+      mood: "Gentle & Heartfelt",
+    },
+  ],
   intro: {
     tagline: "PERSONAL SANCTUARY ♡ SHAIK UBAIDULLAH",
     headerBadge: "JOURNEY & VAULT",
     cardGreeting: "welcome to my digital sanctuary. 👋",
     cardSubtext: "a scrapbook of my personal journey, milestones, lessons, and quiet growth.",
-    envelopeButtonText: "OPEN MY VAULT ✉️",
+    envelopeButtonText: "ENTER SCRAPBOOK ✉️",
+    enterHint: "Click anywhere on the envelope or press [Enter] to explore",
     letterPreview: {
       salutation: "Dear Ubaidullah,",
       body: "Take a pause. Here is your personal digital scrapbook — celebrating where you started, how you stayed kind through everything, and the practical mindset carrying you forward.",
@@ -308,40 +355,44 @@ export const memoriesConfig: MemoriesConfig = {
   },
   mixtape: {
     title: "My Soundtrack & Ambient Vault",
-    subtitle: "music for deep focus, calm thinking, and peaceful evenings.",
-    cassetteLabel: "SHAIK UBAIDULLAH • SIDE A",
+    subtitle: "curated favorites by AUR • music for clarity, reflection & quiet strength.",
+    cassetteLabel: "SHAIK UBAIDULLAH • AUR PLAYLIST",
     tracks: [
       {
         id: "t1",
-        title: "Shape of You (Lofi Acoustic)",
-        artist: "Chill Instrumental",
-        duration: "3:53",
-        mood: "Reflective Beats",
+        title: "Raastah",
+        artist: "AUR ft. Taimour Baig",
+        duration: "3:49",
+        mood: "Soulful & Driven",
         channel: "lofi",
+        url: "/audio/raastah.mp3",
       },
       {
         id: "t2",
-        title: "Late Night Focus & Code",
-        artist: "Deep Synthesizer",
-        duration: "4:12",
-        mood: "Deep Work",
-        channel: "lofi",
+        title: "Us",
+        artist: "AUR",
+        duration: "4:24",
+        mood: "Deep & Melodic",
+        channel: "crackle",
+        url: "/audio/us.mp3",
       },
       {
         id: "t3",
-        title: "Rain on the Window Sill",
-        artist: "Monsoon Piano & Water",
-        duration: "2:45",
-        mood: "Peaceful Rain",
-        channel: "rain",
+        title: "Safarnama",
+        artist: "AUR",
+        duration: "3:44",
+        mood: "Reflective Journey",
+        channel: "lofi",
+        url: "/audio/safarnama.mp3",
       },
       {
         id: "t4",
-        title: "Vinyl Warmth by the Desk",
-        artist: "Vintage Tape Crackle",
-        duration: "3:30",
-        mood: "Warm Hearth",
-        channel: "crackle",
+        title: "Tum Se",
+        artist: "AUR",
+        duration: "4:43",
+        mood: "Gentle & Heartfelt",
+        channel: "rain",
+        url: "/audio/tum-se.mp3",
       },
     ],
     quotes: [

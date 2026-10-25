@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="sealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E28498" />
+      <stop offset="100%" stop-color="#BF5D74" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE68A" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Clean rounded squircle container -->
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#sealGrad)" filter="url(#shadow)" />
+
+  <!-- Subtle inner border ring -->
+  <rect x="6.5" y="6.5" width="51" height="51" rx="13.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="1.5" />
+
+  <!-- Minimalist Monogram "U" -->
+  <path
+    d="M22,19 L22,34 C22,40.5 26.5,45 32,45 C37.5,45 42,40.5 42,34 L42,19"
+    fill="none"
+    stroke="#FFFFFF"
+    stroke-width="5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Delicate golden leaf sprout on top-right of U -->
+  <path
+    d="M42,20 C46,15 52,14 52,14 C52,14 51,20 47,23 C44,25 42,22 42,20 Z"
+    fill="url(#goldGrad)"
+  />
+  <circle cx="49" cy="12" r="1.5" fill="#FEF08A" />
+</svg>

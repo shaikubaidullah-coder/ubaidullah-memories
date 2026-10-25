@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { AudioPlayer } from '@/components/AudioPlayer';
+import { MusicProvider } from '@/context/MusicContext';
 
 // Dynamically import all scenes for smooth client-only rendering
 const IntroScene = dynamic(() => import('@/components/scenes/IntroScene').then((m) => m.IntroScene), { ssr: false });
@@ -26,7 +27,7 @@ export type SceneType =
   | 'lanterns'
   | 'sky';
 
-export default function Home() {
+function ScrapbookApp() {
   const [scene, setScene] = useState<SceneType>('intro');
   const [autoPlayTrigger, setAutoPlayTrigger] = useState(false);
 
@@ -109,5 +110,13 @@ export default function Home() {
       {/* Global Persistent Floating Audio Player */}
       <AudioPlayer scene={scene} autoPlayTrigger={autoPlayTrigger} />
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <MusicProvider>
+      <ScrapbookApp />
+    </MusicProvider>
   );
 }
