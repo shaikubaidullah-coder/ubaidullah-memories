@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #faf6ee;
+  --foreground: #2c2520;
+  --color-paper: #faf6ee;
+  --color-accent-pink: #d47a8f;
+  --color-accent-yellow: #f2ca65;
+  --color-accent-blue: #7eafce;
+  --color-accent-green: #89ac94;
+  --color-text-ink: #2c2520;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-text-ink);
+  font-family: var(--font-outfit), sans-serif;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hand-drawn-border {
+  border: 2px solid var(--color-text-ink);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+.paper-shadow {
+  box-shadow: 0 4px 10px rgba(44, 37, 32, 0.08), 0 2px 4px rgba(44, 37, 32, 0.04);
+}
+
+.polaroid-shadow {
+  box-shadow: 0 8px 24px rgba(44, 37, 32, 0.12), 0 2px 6px rgba(44, 37, 32, 0.06);
+}
+
+.sticky-shadow {
+  box-shadow: 2px 10px 20px rgba(44, 37, 32, 0.15);
+}
+
+.washi-tape {
+  -webkit-backdrop-filter: blur(0.5px);
+  backdrop-filter: blur(0.5px);
+  background-color: rgba(247, 229, 169, 0.65);
+  border-left: 2px dashed rgba(44, 37, 32, 0.1);
+  border-right: 2px dashed rgba(44, 37, 32, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f8f1e7;
+}
+::-webkit-scrollbar-thumb {
+  background: #b4cbb7;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a2c2e1;
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+.cursor-blink {
+  border-right: 2px solid var(--color-text-ink);
+  animation: 0.75s step-end infinite blink;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
