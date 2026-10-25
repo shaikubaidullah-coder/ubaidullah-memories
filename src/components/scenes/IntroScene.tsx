@@ -124,7 +124,7 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
           shadows
           dpr={[1, 1.5]}
           gl={{ antialias: true, alpha: false }}
-          camera={{ position: [0, 0, 7], fov: 45 }}
+          camera={{ position: [0, 0, isMobile ? 9.2 : 7], fov: isMobile ? 54 : 45 }}
         >
           <DeskScene3D accentColor={accentColor} />
           <Envelope3D
@@ -137,13 +137,16 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
       </div>
 
       {/* Top Left Theme Color Picker */}
-      <div className="absolute top-4 left-4 flex items-center pointer-events-auto z-40">
+      <div
+        className="absolute flex items-center pointer-events-auto z-40"
+        style={{ top: 'max(0.75rem, env(safe-area-inset-top))', left: 'max(0.75rem, env(safe-area-inset-left))' }}
+      >
         <button
           onClick={() => {
             SoundEngine.playPopClick();
             setShowColorPicker(!showColorPicker);
           }}
-          className="w-10 h-10 rounded-full bg-white border border-text-ink/10 flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-all text-lg cursor-pointer"
+          className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white border border-text-ink/10 flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-all text-base md:text-lg cursor-pointer"
           title="Pick theme color"
         >
           🎨
@@ -152,7 +155,7 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
         <AnimatePresence>
           {showColorPicker && (
             <motion.div
-              className="flex items-center gap-2 bg-white/95 border border-text-ink/10 rounded-full px-3 py-1.5 shadow-md ml-2"
+              className="flex items-center gap-1.5 md:gap-2 bg-white/95 border border-text-ink/10 rounded-full px-2.5 py-1 md:px-3 md:py-1.5 shadow-md ml-2"
               initial={{ opacity: 0, x: -15, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -15, scale: 0.95 }}
@@ -167,7 +170,7 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
                     showToast(`${theme.name} Theme ✨`);
                   }}
                   style={{ backgroundColor: theme.hex }}
-                  className={`w-6 h-6 rounded-full border border-black/10 cursor-pointer transition-all hover:scale-115 active:scale-90 relative ${
+                  className={`w-5 h-5 md:w-6 md:h-6 rounded-full border border-black/10 cursor-pointer transition-all hover:scale-115 active:scale-90 relative ${
                     accentColor === theme.hex ? 'ring-2 ring-zinc-800 ring-offset-1' : ''
                   }`}
                   title={theme.name}
@@ -179,13 +182,16 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
       </div>
 
       {/* Direct Quick Enter Button (Top Bar) */}
-      <div className="absolute top-4.5 left-16 md:left-20 flex items-center gap-2 z-40 pointer-events-auto">
+      <div
+        className="absolute flex items-center gap-2 z-40 pointer-events-auto"
+        style={{ top: 'max(0.75rem, env(safe-area-inset-top))', left: isMobile ? '3.5rem' : '4.5rem' }}
+      >
         <button
           onClick={handleDirectEnter}
-          className="px-3 py-1.5 bg-white/80 hover:bg-white text-text-ink/75 hover:text-accent-pink rounded-full border border-text-ink/10 shadow-xs hover:shadow-md text-[10px] md:text-[11px] font-sans font-bold tracking-wider uppercase transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+          className="px-2.5 py-1 md:px-3 md:py-1.5 bg-white/80 hover:bg-white text-text-ink/75 hover:text-accent-pink rounded-full border border-text-ink/10 shadow-xs hover:shadow-md text-[9px] md:text-[11px] font-sans font-bold tracking-wider uppercase transition-all cursor-pointer flex items-center gap-1 active:scale-95"
           title="Skip intro and enter directly"
         >
-          <span>Enter Directly</span>
+          <span>Enter</span>
           <span>→</span>
         </button>
       </div>
@@ -207,7 +213,7 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
         </AnimatePresence>
       </div>
 
-      {/* Center Bird Banner */}
+      {/* Center Bird Banner (Desktop) */}
       {!isMobile && (
         <motion.div
           className="absolute top-[10%] left-1/2 -translate-x-1/2 flex items-center gap-6 pointer-events-none z-10"
@@ -262,8 +268,31 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
         </motion.div>
       )}
 
+      {/* Mobile Top Greeting Card */}
+      {isMobile && (
+        <motion.div
+          className="absolute inset-x-4 flex justify-center pointer-events-none z-20"
+          style={{ top: 'max(3.8rem, calc(env(safe-area-inset-top) + 2.8rem))' }}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="bg-white/95 backdrop-blur-xs border border-text-ink/10 px-4 py-2 rounded-2xl shadow-sm text-center max-w-[300px]">
+            <span className="font-handwritten text-base text-accent-pink font-extrabold block">
+              {memoriesConfig.intro.cardGreeting}
+            </span>
+            <span className="font-sans text-[10px] text-text-ink/65 font-medium leading-tight block">
+              {memoriesConfig.intro.cardSubtext}
+            </span>
+          </div>
+        </motion.div>
+      )}
+
       {/* Bottom Action Area with Clear "ENTER" Controls */}
-      <div className="absolute bottom-8 md:bottom-10 w-full flex flex-col items-center justify-center z-30 pointer-events-none px-4">
+      <div
+        className="absolute w-full flex flex-col items-center justify-center z-30 pointer-events-none px-4"
+        style={{ bottom: 'max(1.5rem, calc(env(safe-area-inset-bottom) + 0.75rem))' }}
+      >
         <AnimatePresence mode="wait">
           {!isEnvelopeOpen ? (
             /* STATE 1: Envelope is closed — Big Prominent "ENTER SCRAPBOOK" button */
@@ -277,24 +306,24 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
             >
               <motion.button
                 onClick={triggerOpen}
-                className="px-8 py-3.5 bg-white text-text-ink hand-drawn-border font-bold text-sm md:text-base shadow-lg hover:shadow-xl cursor-pointer flex items-center gap-2.5 transition-all text-accent-pink hover:scale-105 active:scale-95 group relative"
+                className="px-6 py-3 md:px-8 md:py-3.5 bg-white text-text-ink hand-drawn-border font-bold text-xs md:text-base shadow-lg hover:shadow-xl cursor-pointer flex items-center gap-2 md:gap-2.5 transition-all text-accent-pink hover:scale-105 active:scale-95 group relative"
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
               >
-                <span className="text-lg">✉️</span>
+                <span className="text-base md:text-lg">✉️</span>
                 <span className="tracking-wide uppercase font-extrabold font-sans">
                   {memoriesConfig.intro.envelopeButtonText}
                 </span>
                 <span className="text-sm transition-transform group-hover:translate-x-1">→</span>
               </motion.button>
 
-              <div className="flex items-center gap-2 text-[11px] font-sans font-medium text-text-ink/65 tracking-wide bg-white/70 backdrop-blur-xs px-3 py-1 rounded-full border border-text-ink/10 shadow-2xs">
-                <span>✦ Click anywhere on envelope or press <kbd className="px-1.5 py-0.5 bg-zinc-200 text-zinc-800 rounded font-mono font-bold text-[10px]">Enter ↵</kbd></span>
+              <div className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-[11px] font-sans font-medium text-text-ink/65 tracking-wide bg-white/70 backdrop-blur-xs px-3 py-1 rounded-full border border-text-ink/10 shadow-2xs">
+                <span>✦ Tap envelope or press <kbd className="px-1.5 py-0.5 bg-zinc-200 text-zinc-800 rounded font-mono font-bold text-[9px] md:text-[10px]">Enter ↵</kbd></span>
               </div>
 
-              <div className="relative w-full h-4 mt-0.5 pointer-events-none flex justify-center gap-24">
-                <Doodle type="sparkle" className="w-4 h-4 opacity-50" color="yellow" />
-                <Doodle type="sparkle" className="w-4 h-4 opacity-50" color="green" />
+              <div className="relative w-full h-4 mt-0.5 pointer-events-none flex justify-center gap-20 md:gap-24">
+                <Doodle type="sparkle" className="w-3.5 h-3.5 md:w-4 md:h-4 opacity-50" color="yellow" />
+                <Doodle type="sparkle" className="w-3.5 h-3.5 md:w-4 md:h-4 opacity-50" color="green" />
               </div>
             </motion.div>
           ) : (
@@ -309,16 +338,16 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
             >
               <motion.button
                 onClick={handleProceed}
-                className="px-9 py-3.5 bg-accent-pink text-white font-sans font-extrabold text-sm md:text-base rounded-full shadow-xl hover:shadow-2xl cursor-pointer flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 animate-pulse"
+                className="px-7 py-3 md:px-9 md:py-3.5 bg-accent-pink text-white font-sans font-extrabold text-xs md:text-base rounded-full shadow-xl hover:shadow-2xl cursor-pointer flex items-center gap-2 md:gap-2.5 transition-all hover:scale-105 active:scale-95 animate-pulse"
                 whileHover={{ scale: 1.06, y: -2 }}
                 whileTap={{ scale: 0.96 }}
               >
                 <span>ENTER SCRAPBOOK</span>
-                <span className="text-lg">→</span>
+                <span className="text-base md:text-lg">→</span>
               </motion.button>
 
-              <div className="flex items-center gap-2 text-[11px] font-sans font-medium text-text-ink/70 bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-text-ink/10 shadow-2xs">
-                <span>✦ Press <kbd className="px-1.5 py-0.5 bg-zinc-200 text-zinc-800 rounded font-mono font-bold text-[10px]">Enter ↵</kbd> or click button above to enter</span>
+              <div className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-[11px] font-sans font-medium text-text-ink/70 bg-white/80 backdrop-blur-xs px-3 py-1 rounded-full border border-text-ink/10 shadow-2xs">
+                <span>✦ Tap above or press <kbd className="px-1.5 py-0.5 bg-zinc-200 text-zinc-800 rounded font-mono font-bold text-[9px] md:text-[10px]">Enter ↵</kbd></span>
               </div>
             </motion.div>
           )}

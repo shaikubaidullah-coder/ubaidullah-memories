@@ -308,7 +308,7 @@ export const LetterScene: React.FC<LetterSceneProps> = ({
         ) : (
           /* Unfolded Letter Sheet */
           <motion.div
-            className="relative bg-[#FCFAF5] w-[min(90vw,600px)] rounded-[3px] border border-[#E9DFB9]/70 p-6 md:p-12 text-left pointer-events-auto flex flex-col font-handwritten select-none cursor-grab active:cursor-grabbing"
+            className="relative bg-[#FCFAF5] w-[min(92vw,580px)] rounded-[3px] border border-[#E9DFB9]/70 p-4 sm:p-6 md:p-10 text-left pointer-events-auto flex flex-col font-handwritten select-none cursor-grab active:cursor-grabbing"
             style={{
               boxShadow: '0 12px 36px rgba(44,37,32,0.08), 0 2px 4px rgba(44,37,32,0.04)',
               rotateX: tiltX,

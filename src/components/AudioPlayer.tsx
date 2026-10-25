@@ -59,7 +59,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ scene = 'intro', autoP
   }, [scene, setVolume]);
 
   return (
-    <div className="fixed top-4 right-4 md:top-6 md:right-6 z-[99] pointer-events-auto flex items-center gap-2 md:gap-3">
+    <div className="fixed top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 z-[99] pointer-events-auto flex items-center gap-1.5 sm:gap-2 md:gap-3" style={{ top: 'max(0.75rem, env(safe-area-inset-top))', right: 'max(0.75rem, env(safe-area-inset-right))' }}>
       {/* Toast Prompt */}
       <AnimatePresence>
         {showToast && !isPlaying && (
@@ -117,7 +117,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ scene = 'intro', autoP
               initial={{ opacity: 0, y: -10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              className="absolute right-0 top-12 bg-white/95 backdrop-blur-md border border-text-ink/10 rounded-2xl shadow-2xl p-2.5 flex flex-col gap-1 w-[260px] z-50 text-xs font-sans font-bold"
+              className="absolute right-0 top-12 bg-white/95 backdrop-blur-md border border-text-ink/10 rounded-2xl shadow-2xl p-2.5 flex flex-col gap-1 w-[260px] max-w-[calc(100vw-1.5rem)] z-50 text-xs font-sans font-bold"
             >
               <div className="flex justify-between items-center px-2 py-1 text-[9px] uppercase tracking-wider text-text-ink/40 border-b border-zinc-100 pb-1 mb-1">
                 <span>AUR Songs Playlist (4)</span>

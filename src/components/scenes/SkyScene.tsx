@@ -55,7 +55,7 @@ export const SkyScene: React.FC<SkySceneProps> = ({ onContinue }) => {
   const [showLoading, setShowLoading] = useState(true);
 
   const { finale } = memoriesConfig;
-  const heroPhoto = '/images/mahaboob/photo_3_pillar_portrait.jpg';
+  const heroPhoto = '/images/me/photo_3_pillar_portrait.jpg';
 
   useEffect(() => {
     const t1 = setTimeout(() => {
@@ -92,7 +92,7 @@ export const SkyScene: React.FC<SkySceneProps> = ({ onContinue }) => {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden select-none bg-gradient-to-b from-[#0B0F19] to-[#030712] text-zinc-100">
+    <div className="relative w-full min-h-[100dvh] h-[100dvh] overflow-hidden select-none bg-gradient-to-b from-[#0B0F19] to-[#030712] text-zinc-100">
       {/* 3D Canvas */}
       <Canvas shadows camera={{ position: [0, 3.5, 9], fov: 42 }} className="w-full h-full relative z-0">
         <ambientLight intensity={stage === 'living-memory' ? 0.4 : 0.8} color="#CBD5E1" />
@@ -153,7 +153,7 @@ export const SkyScene: React.FC<SkySceneProps> = ({ onContinue }) => {
 
             {stage === 'final-messages' && (
               <motion.div
-                className="bg-zinc-900/90 backdrop-blur-md border border-zinc-700/80 p-8 rounded-2xl max-w-md text-center pointer-events-auto flex flex-col font-handwritten relative shadow-2xl"
+                className="bg-zinc-900/90 backdrop-blur-md border border-zinc-700/80 p-5 sm:p-6 md:p-8 rounded-2xl max-w-md w-full max-h-[72dvh] overflow-y-auto text-center pointer-events-auto flex flex-col font-handwritten relative shadow-2xl"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.2 }}

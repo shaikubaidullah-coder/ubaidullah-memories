@@ -266,7 +266,7 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
             onClick={() => setActiveModal(null)}
           >
             <motion.div
-              className="bg-[#1F293D] border border-zinc-700/80 rounded-2xl max-w-md w-full p-6 shadow-2xl relative"
+              className="bg-[#1F293D] border border-zinc-700/80 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl relative max-h-[85dvh] overflow-y-auto"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -293,7 +293,7 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
                     rows={3}
                     value={userAnswer}
                     onChange={(e) => setUserAnswer(e.target.value)}
-                    placeholder={capsule.question.placeholder || 'Type here, Mahaboob...'}
+                    placeholder={capsule.question.placeholder || 'Type your reflection here, Ubaidullah...'}
                     className="w-full bg-zinc-900/80 border border-zinc-700 rounded-lg p-3 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-accent-pink font-sans resize-none"
                   />
                   <div className="flex justify-end gap-2 mt-4">

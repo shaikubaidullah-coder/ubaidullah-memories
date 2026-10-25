@@ -13,6 +13,7 @@
   --color-text-ink: #2c2520;
 }
 
+html,
 body {
   background-color: var(--color-paper);
   color: var(--color-text-ink);
@@ -20,6 +21,11 @@ body {
   overflow-x: hidden;
   user-select: none;
   -webkit-user-select: none;
+  min-height: 100%;
+  min-height: 100dvh;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
 .hand-drawn-border {

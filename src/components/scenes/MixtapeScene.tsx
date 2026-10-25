@@ -62,9 +62,9 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
       {/* Main Interactive Cassette Deck & Tracklist */}
       <div className="flex-grow w-full max-w-4xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-8 md:gap-12 my-6 z-20">
         {/* Retro 3D Flippable Cassette Tape */}
-        <div className="relative perspective-1000">
+        <div className="relative perspective-1000 w-full flex justify-center">
           <motion.div
-            className="relative w-[320px] md:w-[380px] aspect-[1.6/1] cursor-pointer"
+            className="relative w-[min(90vw,360px)] md:w-[380px] aspect-[1.6/1] cursor-pointer"
             style={{ transformStyle: 'preserve-3d' }}
             animate={{ rotateY: isFlipped ? 180 : 0 }}
             transition={{ duration: 0.8, ease: 'easeInOut' }}
@@ -96,33 +96,33 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
                 </div>
 
                 {/* Center Tape Window with Spools */}
-                <div className="my-2 bg-[#1A1817] rounded-md border border-zinc-600 p-2 flex items-center justify-between px-8 relative overflow-hidden">
+                <div className="my-1.5 md:my-2 bg-[#1A1817] rounded-md border border-zinc-600 p-1.5 md:p-2 flex items-center justify-between px-3 md:px-8 relative overflow-hidden">
                   {/* Left Spool */}
-                  <div className="relative w-12 h-12 rounded-full border-2 border-zinc-500 bg-[#2C2725] flex items-center justify-center">
+                  <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-zinc-500 bg-[#2C2725] flex items-center justify-center shrink-0">
                     <motion.div
-                      className="w-8 h-8 rounded-full border border-dashed border-zinc-400 flex items-center justify-center"
+                      className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-dashed border-zinc-400 flex items-center justify-center"
                       animate={isPlaying ? { rotate: 360 } : {}}
                       transition={{ duration: 2.8, repeat: Infinity, ease: 'linear' }}
                     >
-                      <div className="w-3 h-3 rounded-full bg-zinc-800" />
+                      <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-zinc-800" />
                     </motion.div>
                   </div>
 
                   {/* Tape level center window */}
-                  <div className="h-6 w-24 bg-zinc-800/80 rounded border border-zinc-600 flex items-center justify-center px-2">
-                    <span className="text-[8px] font-mono text-zinc-300 tracking-wider truncate">
+                  <div className="h-5 md:h-6 w-20 md:w-24 bg-zinc-800/80 rounded border border-zinc-600 flex items-center justify-center px-1 md:px-2 mx-1">
+                    <span className="text-[7px] md:text-[8px] font-mono text-zinc-300 tracking-wider truncate">
                       {isPlaying ? `PLAYING: ${currentSong.title.toUpperCase()}` : 'STOPPED'}
                     </span>
                   </div>
 
                   {/* Right Spool */}
-                  <div className="relative w-12 h-12 rounded-full border-2 border-zinc-500 bg-[#2C2725] flex items-center justify-center">
+                  <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-zinc-500 bg-[#2C2725] flex items-center justify-center shrink-0">
                     <motion.div
-                      className="w-8 h-8 rounded-full border border-dashed border-zinc-400 flex items-center justify-center"
+                      className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-dashed border-zinc-400 flex items-center justify-center"
                       animate={isPlaying ? { rotate: 360 } : {}}
                       transition={{ duration: 2.8, repeat: Infinity, ease: 'linear' }}
                     >
-                      <div className="w-3 h-3 rounded-full bg-zinc-800" />
+                      <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-zinc-800" />
                     </motion.div>
                   </div>
                 </div>

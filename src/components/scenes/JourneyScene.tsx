@@ -48,11 +48,11 @@ export const JourneyScene: React.FC<JourneySceneProps> = ({ onContinue, onBack }
       </div>
 
       {/* Timeline Milestone Navigation Bar */}
-      <div className="w-full max-w-4xl mx-auto z-20 my-4">
+      <div className="w-full max-w-4xl mx-auto z-20 my-2 md:my-4">
         {/* Horizontal Progress Path */}
-        <div className="relative flex items-center justify-between px-4 md:px-8">
+        <div className="relative flex items-center justify-between px-2 sm:px-4 md:px-8">
           {/* Connecting Dotted Line */}
-          <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-0.5 border-t-2 border-dashed border-text-ink/25 z-0" />
+          <div className="absolute left-6 right-6 sm:left-8 sm:right-8 top-1/2 -translate-y-1/2 h-0.5 border-t-2 border-dashed border-text-ink/25 z-0" />
 
           {milestones.map((m, idx) => (
             <button
@@ -61,16 +61,16 @@ export const JourneyScene: React.FC<JourneySceneProps> = ({ onContinue, onBack }
               className="relative z-10 flex flex-col items-center group cursor-pointer"
             >
               <div
-                className={`w-10 h-10 md:w-12 md:h-12 rounded-full border-2 flex items-center justify-center font-handwritten text-base md:text-lg font-bold shadow-md transition-all ${
+                className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full border-2 flex items-center justify-center font-handwritten text-sm sm:text-base md:text-lg font-bold shadow-md transition-all ${
                   selectedMilestoneIdx === idx
-                    ? 'bg-accent-pink text-white border-white scale-115 ring-4 ring-accent-pink/20'
+                    ? 'bg-accent-pink text-white border-white scale-110 sm:scale-115 ring-2 sm:ring-4 ring-accent-pink/20'
                     : 'bg-white text-text-ink/70 border-text-ink/15 hover:scale-105'
                 }`}
               >
                 {idx + 1}
               </div>
               <span
-                className={`mt-2 font-handwritten text-xs md:text-sm font-bold whitespace-nowrap hidden sm:block ${
+                className={`mt-1.5 font-handwritten text-xs md:text-sm font-bold whitespace-nowrap hidden sm:block ${
                   selectedMilestoneIdx === idx ? 'text-accent-pink' : 'text-text-ink/50'
                 }`}
               >
@@ -91,13 +91,13 @@ export const JourneyScene: React.FC<JourneySceneProps> = ({ onContinue, onBack }
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.96 }}
               transition={{ duration: 0.4 }}
-              className="w-full bg-[#FFFDF9] border border-[#DFD8C4] rounded-2xl shadow-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-8 relative"
+              className="w-full bg-[#FFFDF9] border border-[#DFD8C4] rounded-2xl shadow-xl p-4 sm:p-6 md:p-8 flex flex-col md:flex-row items-center gap-4 sm:gap-6 md:gap-8 relative"
             >
-              <WashiTape color="yellow" className="-top-3 left-6 w-24 h-6" tilt={-2} />
-              <WashiTape color="pink" className="-top-3 right-6 w-24 h-6" tilt={3} />
+              <WashiTape color="yellow" className="-top-3 left-6 w-20 md:w-24 h-5 md:h-6" tilt={-2} />
+              <WashiTape color="pink" className="-top-3 right-6 w-20 md:w-24 h-5 md:h-6" tilt={3} />
 
               {/* Photo Frame */}
-              <div className="w-[200px] md:w-[240px] aspect-[1/1.2] flex-shrink-0 bg-white p-2.5 pb-5 border border-zinc-200/80 shadow-md rounded-xs rotate-[-2deg]">
+              <div className="w-[170px] sm:w-[210px] md:w-[240px] aspect-[1/1.2] flex-shrink-0 bg-white p-2 sm:p-2.5 pb-4 sm:pb-5 border border-zinc-200/80 shadow-md rounded-xs rotate-[-2deg]">
                 <div className="w-full aspect-square bg-zinc-100 overflow-hidden rounded-xs border border-zinc-200/50 mb-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img

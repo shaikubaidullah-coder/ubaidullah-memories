@@ -151,11 +151,23 @@ export const DuoScene: React.FC<DuoSceneProps> = ({ onContinue }) => {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeSlide}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.3}
+                  onDragEnd={(_, info) => {
+                    if (info.offset.x < -40) {
+                      SoundEngine.playPopClick();
+                      setActiveSlide((prev) => (prev + 1) % polaroids.length);
+                    } else if (info.offset.x > 40) {
+                      SoundEngine.playPopClick();
+                      setActiveSlide((prev) => (prev > 0 ? prev - 1 : polaroids.length - 1));
+                    }
+                  }}
                   initial={{ x: 100, opacity: 0, rotate: 6 }}
                   animate={{ x: 0, opacity: 1, rotate: polaroids[activeSlide]?.rotation || 0 }}
                   exit={{ x: -100, opacity: 0, rotate: -6 }}
                   transition={{ type: 'spring', stiffness: 180, damping: 18 }}
-                  className="w-full h-full absolute"
+                  className="w-full h-full absolute cursor-grab active:cursor-grabbing"
                 >
                   {polaroids[activeSlide] && (
                     <PolaroidCard

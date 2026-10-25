@@ -124,7 +124,7 @@ export const PolaroidCard: React.FC<PolaroidCardProps> = ({
           onClick={() => setIsZoomed(false)}
         >
           <motion.div
-            className="relative bg-white p-4 pb-8 rounded-sm max-w-md w-full shadow-2xl"
+            className="relative bg-white p-4 pb-6 rounded-sm max-w-md w-full shadow-2xl max-h-[90dvh] overflow-y-auto"
             initial={{ scale: 0.8, rotate: -3 }}
             animate={{ scale: 1, rotate: 0 }}
             exit={{ scale: 0.8 }}
