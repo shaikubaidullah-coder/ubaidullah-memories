@@ -54,8 +54,8 @@ export const SkyScene: React.FC<SkySceneProps> = ({ onContinue }) => {
   >('transition-entry');
   const [showLoading, setShowLoading] = useState(true);
 
-  const { finale, duo } = memoriesConfig;
-  const heroPhoto = duo.polaroids[finale.heroMemoryIndex]?.src || '/images/hero_2.png';
+  const { finale } = memoriesConfig;
+  const heroPhoto = '/images/mahaboob/photo_3_pillar_portrait.jpg';
 
   useEffect(() => {
     const t1 = setTimeout(() => {
@@ -176,7 +176,7 @@ export const SkyScene: React.FC<SkySceneProps> = ({ onContinue }) => {
                     }}
                     className="px-6 py-2.5 bg-accent-pink hover:bg-accent-pink/90 text-white font-sans text-xs uppercase tracking-widest font-black rounded-full shadow-lg active:scale-95 transition-all cursor-pointer"
                   >
-                    Replay the journey 🔄
+                    Replay the entire journey 🔄
                   </button>
                 </div>
               </motion.div>

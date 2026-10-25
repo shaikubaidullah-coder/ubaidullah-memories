@@ -430,7 +430,7 @@ export const MemoriesScene: React.FC<MemoriesSceneProps> = ({ onContinue, onRepl
         )}
       </AnimatePresence>
 
-      {/* Bottom Button to Advance to Letter */}
+      {/* Bottom Button to Advance to Mixtape Vault */}
       <div className="w-full flex justify-center z-30 pb-4">
         <motion.button
           onClick={handleProceed}
@@ -438,7 +438,7 @@ export const MemoriesScene: React.FC<MemoriesSceneProps> = ({ onContinue, onRepl
           whileHover={{ scale: 1.03, y: -2 }}
           whileTap={{ scale: 0.97 }}
         >
-          <span>read the letter →</span>
+          <span>the mixtape vault 📼 →</span>
         </motion.button>
       </div>
     </div>

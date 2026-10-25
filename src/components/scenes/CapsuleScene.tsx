@@ -60,7 +60,7 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
     setIsExiting(true);
     setTimeout(() => {
       onContinue();
-    }, 1200);
+    }, 1000);
   };
 
   return (
@@ -247,7 +247,7 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
               whileTap={{ scale: 0.95 }}
               className="bg-[#1F2937]/90 border border-zinc-700 p-4 rounded-xl shadow-lg flex flex-col items-center text-center cursor-pointer group"
             >
-              <span className="text-2xl mb-1 group-hover:scale-115 transition-transform">🍜</span>
+              <span className="text-2xl mb-1 group-hover:scale-115 transition-transform">🍲</span>
               <span className="font-handwritten text-base font-bold text-emerald-400">Secret Note</span>
               <span className="text-[9px] font-sans text-zinc-400 mt-1 uppercase tracking-wider">Confession</span>
             </motion.button>
@@ -293,7 +293,7 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
                     rows={3}
                     value={userAnswer}
                     onChange={(e) => setUserAnswer(e.target.value)}
-                    placeholder={capsule.question.placeholder || 'Type here...'}
+                    placeholder={capsule.question.placeholder || 'Type here, Mahaboob...'}
                     className="w-full bg-zinc-900/80 border border-zinc-700 rounded-lg p-3 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-accent-pink font-sans resize-none"
                   />
                   <div className="flex justify-end gap-2 mt-4">
@@ -320,7 +320,7 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
               {/* Modal 4: Secret Note */}
               {activeModal === 'secret' && (
                 <div className="flex flex-col items-center text-center">
-                  <span className="text-4xl mb-3">🍜</span>
+                  <span className="text-4xl mb-3">🍲</span>
                   <h3 className="font-handwritten text-2xl font-bold text-emerald-400 mb-2">Secret Drawer Unlocked</h3>
                   <p className="text-sm text-zinc-200 font-sans leading-relaxed my-2">{capsule.surprise.message}</p>
                   <p className="font-handwritten text-sm text-zinc-400 mt-2">{capsule.futureNote.text}</p>
@@ -347,7 +347,7 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <span>to the stars... ✨ →</span>
+            <span>sky of wishes ✨ →</span>
           </motion.button>
         )}
 
