@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { Parchment3D } from '../3d/Parchment3D';
 import { WashiTape } from '../WashiTape';
 import { Doodle } from '../Doodles';
 import { Sticker } from '../Sticker';
@@ -27,6 +30,7 @@ export const LetterScene: React.FC<LetterSceneProps> = ({
   const [isSecretRevealed, setIsSecretRevealed] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
+  const [is3DScroll, setIs3DScroll] = useState(false);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -305,6 +309,69 @@ export const LetterScene: React.FC<LetterSceneProps> = ({
               </motion.div>
             )}
           </motion.div>
+        ) : is3DScroll ? (
+          /* 3D Parchment Scroll View */
+          <motion.div
+            className="relative w-[min(92vw,580px)] h-[540px] bg-amber-50/30 border border-amber-200/60 rounded-2xl shadow-2xl p-4 flex flex-col justify-between overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex justify-between items-center px-3 py-1.5 z-30 bg-white/80 backdrop-blur-xs rounded-full border border-amber-200/60 text-[10px] font-mono shadow-xs">
+              <span className="font-bold text-amber-900 flex items-center gap-1.5">
+                <span>📜</span> 3D Living Parchment Scroll
+              </span>
+              <button
+                onClick={() => {
+                  SoundEngine.playPopClick();
+                  setIs3DScroll(false);
+                }}
+                className="text-[9px] text-accent-pink font-bold hover:underline cursor-pointer bg-white px-2 py-0.5 rounded-full border border-pink-200"
+              >
+                Switch to Flat Sheet ✉️
+              </button>
+            </div>
+            <div className="absolute inset-0 z-10">
+              <Canvas
+                shadows
+                dpr={[1, 1.5]}
+                gl={{ antialias: true, alpha: true }}
+                camera={{ position: [0, 0, 4.4], fov: 42 }}
+              >
+                <ambientLight intensity={1.2} />
+                <directionalLight position={[2, 4, 3]} intensity={1.6} />
+                <pointLight position={[0, 0, 2]} color="#FFA726" intensity={1.2} distance={5} />
+                <Suspense fallback={null}>
+                  <Parchment3D
+                    position={[0, 0, 0]}
+                    rotation={[0.04, 0, 0]}
+                    scale={0.17}
+                  />
+                  <OrbitControls
+                    enableZoom={false}
+                    maxPolarAngle={Math.PI / 1.8}
+                    minPolarAngle={Math.PI / 2.3}
+                    maxAzimuthAngle={Math.PI / 5}
+                    minAzimuthAngle={-Math.PI / 5}
+                  />
+                </Suspense>
+              </Canvas>
+            </div>
+            {/* Overlay Calligraphy in 3D Scroll */}
+            <div className="relative z-20 pointer-events-none p-4 sm:p-8 pt-8 text-center font-handwritten text-text-ink/90 flex flex-col justify-center h-full">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-amber-950 mb-3 drop-shadow-xs">
+                {salutationText}
+              </h2>
+              <div className="space-y-2 text-xs sm:text-sm md:text-base leading-relaxed text-amber-900 font-bold max-w-[420px] mx-auto drop-shadow-xs">
+                {paragraphLines.map((line, idx) => (
+                  <p key={idx}>{line}</p>
+                ))}
+              </div>
+              <div className="mt-4 text-right text-base sm:text-lg md:text-xl font-extrabold text-accent-pink pr-6 drop-shadow-xs">
+                {signatureText}
+              </div>
+            </div>
+          </motion.div>
         ) : (
           /* Unfolded Letter Sheet */
           <motion.div
@@ -321,6 +388,19 @@ export const LetterScene: React.FC<LetterSceneProps> = ({
             drag
             dragConstraints={{ left: -50, right: 50, top: -50, bottom: 50 }}
           >
+            {/* Top Bar with 3D Parchment Switcher */}
+            <div className="flex justify-between items-center pb-2 mb-2 border-b border-zinc-100 z-20">
+              <span className="text-[9px] font-mono text-zinc-400">Shaik Ubaidullah Vault</span>
+              <button
+                onClick={() => {
+                  SoundEngine.playPopClick();
+                  setIs3DScroll(true);
+                }}
+                className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300/80 rounded-full text-[9px] font-sans font-bold flex items-center gap-1 shadow-xs cursor-pointer active:scale-95 transition-all"
+              >
+                <span>📜</span> View in 3D Ancient Parchment
+              </button>
+            </div>
             {/* Paper Red Margin Line */}
             <div className="absolute top-0 bottom-0 left-6 md:left-14 w-[1px] bg-red-300/30 pointer-events-none" />
 

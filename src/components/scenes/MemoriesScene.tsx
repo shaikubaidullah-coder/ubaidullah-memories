@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
 import html2canvas from 'html2canvas';
 import { PolaroidCard } from '../PolaroidCard';
+import { Camera3D } from '../3d/Camera3D';
 import { memoriesConfig } from '@/config/memories.config';
 import { SoundEngine } from '@/utils/audio';
 
@@ -59,7 +61,7 @@ export const MemoriesScene: React.FC<MemoriesSceneProps> = ({ onContinue, onRepl
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-paper overflow-hidden flex flex-col justify-start items-center py-6 px-4 md:py-8 md:px-8 select-none">
+    <div className="relative w-full min-h-screen bg-paper overflow-x-hidden overflow-y-auto md:overflow-hidden flex flex-col justify-start items-center py-6 px-4 md:py-8 md:px-8 select-none">
       {/* White camera flash overlay */}
       <AnimatePresence>
         {isCameraFlashing && (
@@ -245,20 +247,38 @@ export const MemoriesScene: React.FC<MemoriesSceneProps> = ({ onContinue, onRepl
           </div>
         </motion.div>
 
-        {/* Working "lofi-cam" Vintage Camera on Desk! */}
+        {/* Working 3D Vintage Camera on Desk! */}
         <motion.div
           data-html2canvas-ignore="true"
-          className="hidden md:flex md:absolute md:left-[calc(50%-70px)] md:top-[calc(50%+130px)] w-[120px] h-[75px] bg-[#E6DEC9] border border-[#C7B79D] shadow-md rounded-sm cursor-pointer pointer-events-auto items-center justify-center group z-20 rotate-[3deg]"
-          whileHover={{ scale: 1.08, y: -4, rotate: 0 }}
-          onClick={handleCaptureSnapshot}
-          title="Click to take instant photo snapshot of your screen!"
+          className="relative md:absolute md:left-[calc(50%-90px)] md:top-[calc(50%+110px)] w-[180px] h-[130px] bg-white/70 backdrop-blur-xs border border-[#C7B79D] shadow-lg rounded-xl cursor-pointer pointer-events-auto p-1.5 z-30 mx-auto mt-4 md:mt-0 flex flex-col justify-between"
+          whileHover={{ scale: 1.05, y: -2 }}
+          title="Click 3D camera to take an instant Polaroid snapshot of your screen!"
         >
-          <div className="absolute -top-1.5 right-4 w-4 h-1.5 bg-[#B5A591] rounded-t-xs" />
-          <div className="w-10 h-10 rounded-full bg-[#1A1816] border-[4px] border-[#5C544C] flex items-center justify-center relative overflow-hidden">
-            <div className="w-3 h-3 rounded-full bg-cyan-400/50 absolute top-1.5 left-1.5 blur-xs group-hover:scale-125 transition-transform" />
+          <div className="flex justify-between items-center px-1 text-[8px] font-mono text-zinc-600">
+            <span className="font-bold flex items-center gap-1">
+              <span>📷</span> 3D lofi-cam
+            </span>
+            <span className="text-[7px] text-amber-600 bg-amber-50 px-1 rounded font-semibold">Tap to snap</span>
           </div>
-          <div className="absolute bottom-1.5 text-[7px] font-sans font-bold text-text-ink/65 uppercase tracking-widest">
-            lofi-cam 📷
+          <div className="w-full h-[95px] relative">
+            <Canvas
+              shadows
+              dpr={[1, 1.5]}
+              gl={{ antialias: true, alpha: true }}
+              camera={{ position: [0, 0.4, 2.0], fov: 38 }}
+            >
+              <ambientLight intensity={1.1} />
+              <directionalLight position={[2, 4, 3]} intensity={1.5} />
+              <Suspense fallback={null}>
+                <Camera3D
+                  position={[0, -0.1, 0]}
+                  rotation={[0.1, -2.8, 0]}
+                  scale={2.4}
+                  interactive={true}
+                  onSnap={handleCaptureSnapshot}
+                />
+              </Suspense>
+            </Canvas>
           </div>
         </motion.div>
 

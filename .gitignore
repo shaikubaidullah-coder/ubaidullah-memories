@@ -29,3 +29,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .vercel
+.playwright-mcp/
+song-* copy/
+*.log

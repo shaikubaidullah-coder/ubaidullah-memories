@@ -38,7 +38,7 @@ function ScrapbookApp() {
   };
 
   return (
-    <main className="w-full min-h-screen bg-paper overflow-hidden relative">
+    <main className="w-full min-h-screen bg-paper overflow-x-hidden relative">
       {/* 1. Intro 3D Desk & Envelope */}
       {scene === 'intro' && (
         <IntroScene

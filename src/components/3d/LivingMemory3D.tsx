@@ -4,6 +4,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
+import { Shelf3D } from './Shelf3D';
+import { Camera3D } from './Camera3D';
+import { Radio3D } from './Radio3D';
 
 interface LivingMemory3DProps {
   stage: 'transition-entry' | 'room-reveal' | 'camera-focus' | 'waiting-for-tap' | 'photo-lifting' | 'living-memory' | 'final-messages';
@@ -73,6 +76,30 @@ export const LivingMemory3D: React.FC<LivingMemory3DProps> = ({
         <planeGeometry args={[40, 40]} />
         <meshStandardMaterial color="#1E293B" roughness={0.9} />
       </mesh>
+
+      {/* Sanctuary Memory Wooden Shelf at the background */}
+      <Shelf3D
+        position={[-3.6, -0.98, -2.6]}
+        rotation={[0, 0.35, 0]}
+        scale={1.8}
+      />
+
+      {/* The 3D Camera on the desk */}
+      <Camera3D
+        position={[3.2, -0.75, 1.2]}
+        rotation={[0, -0.35, 0]}
+        scale={2.0}
+        interactive={true}
+      />
+
+      {/* Vintage Radio glowing in the twilight room */}
+      <Radio3D
+        position={[-3.2, -0.96, 1.2]}
+        rotation={[0, 0.45, 0]}
+        scale={0.4}
+        interactive={true}
+        isPlaying={true}
+      />
 
       {/* Candle */}
       <group position={[3.2, -0.75, -2]}>

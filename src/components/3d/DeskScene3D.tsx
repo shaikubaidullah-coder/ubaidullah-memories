@@ -4,6 +4,9 @@ import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
+import { Camera3D } from './Camera3D';
+import { Radio3D } from './Radio3D';
+import { Shelf3D } from './Shelf3D';
 
 interface DeskScene3DProps {
   accentColor?: string;
@@ -60,6 +63,12 @@ export const DeskScene3D: React.FC<DeskScene3DProps> = ({ accentColor = '#D47A8F
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} receiveShadow>
         <planeGeometry args={[60, 60]} />
         <meshStandardMaterial color="#F8F1E7" roughness={0.95} metalness={0.01} />
+      </mesh>
+
+      {/* Sanctuary Cozy Back Wall */}
+      <mesh position={[0, 4, -4.6]} receiveShadow>
+        <planeGeometry args={[60, 24]} />
+        <meshStandardMaterial color="#F4EFE6" roughness={0.96} metalness={0.01} />
       </mesh>
 
       {/* Candle with flame light */}
@@ -131,20 +140,26 @@ export const DeskScene3D: React.FC<DeskScene3DProps> = ({ accentColor = '#D47A8F
         </mesh>
       </group>
 
-      {/* Vintage Camera */}
-      <group position={[-3.8, -0.75, 1.4]} rotation={[0, 0.45, 0]}>
-        <RoundedBox args={[0.8, 0.52, 0.52]} radius={0.03} smoothness={3} castShadow receiveShadow>
-          <meshStandardMaterial color="#FFFDF9" roughness={0.6} />
-        </RoundedBox>
-        <mesh position={[0, 0, 0.27]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-          <cylinderGeometry args={[0.18, 0.18, 0.12, 24]} />
-          <meshStandardMaterial color="#2C2520" roughness={0.4} />
-        </mesh>
-        <mesh position={[0.26, 0.18, 0.27]}>
-          <boxGeometry args={[0.15, 0.1, 0.02]} />
-          <meshStandardMaterial color="#EAEAEA" roughness={0.2} emissive="#FFFFFF" emissiveIntensity={0.2} />
-        </mesh>
-      </group>
+      {/* Vintage 3D Camera */}
+      <Camera3D
+        position={[-3.8, -0.75, 1.4]}
+        rotation={[0, -2.6, 0]}
+        scale={2.2}
+      />
+
+      {/* Retro 3D Radio */}
+      <Radio3D
+        position={[3.8, -0.96, 1.3]}
+        rotation={[0, -0.45, 0]}
+        scale={0.42}
+      />
+
+      {/* Wooden Clutter & Book Shelf at back */}
+      <Shelf3D
+        position={[-4.5, -0.98, -2.5]}
+        rotation={[0, 0.4, 0]}
+        scale={1.8}
+      />
 
       {/* Stack of Aesthetic Notebooks/Books */}
       <group position={[3.6, -0.92, -1]} rotation={[0, -0.25, 0]}>

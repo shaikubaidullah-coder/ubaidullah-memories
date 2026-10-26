@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Sparkles } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -98,7 +98,9 @@ export const SkyScene: React.FC<SkySceneProps> = ({ onContinue }) => {
         <ambientLight intensity={stage === 'living-memory' ? 0.4 : 0.8} color="#CBD5E1" />
         <directionalLight castShadow position={[4, 8, 3]} intensity={1.1} color="#E2E8F0" />
         <CameraController stage={stage} />
-        <LivingMemory3D stage={stage} heroPhotoSrc={heroPhoto} onPhotoClick={handlePhotoClick} />
+        <Suspense fallback={null}>
+          <LivingMemory3D stage={stage} heroPhotoSrc={heroPhoto} onPhotoClick={handlePhotoClick} />
+        </Suspense>
         <Sparkles count={50} scale={10} size={1.8} speed={0.3} color="#F7E5A9" />
       </Canvas>
 

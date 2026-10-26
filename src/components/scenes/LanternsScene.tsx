@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Sparkles, Html } from '@react-three/drei';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
+import { ToyPlane3D } from '../3d/ToyPlane3D';
+import { Dollar3D } from '../3d/Dollar3D';
 import { memoriesConfig } from '@/config/memories.config';
 import { SoundEngine } from '@/utils/audio';
 
@@ -113,6 +115,25 @@ export const LanternsScene: React.FC<LanternsSceneProps> = ({ onContinue, onBack
         {lanternList.map((item) => (
           <FloatingLantern key={item.id} initialPos={item.pos} wishText={item.wish} speed={item.speed} />
         ))}
+
+        <Suspense fallback={null}>
+          {/* Soaring Dream Airplane through the Wishing Sky */}
+          <ToyPlane3D
+            position={[0, 4.2, -4]}
+            rotation={[0.1, 0, 0]}
+            scale={14}
+            flightPath={true}
+            interactive={true}
+          />
+
+          {/* Floating Financial Freedom Golden Talisman */}
+          <Dollar3D
+            position={[3.2, 0.2, -3]}
+            rotation={[0, 0.4, 0.1]}
+            scale={1.3}
+            interactive={true}
+          />
+        </Suspense>
 
         {/* Ambient Starlight Sparkles */}
         <Sparkles count={60} scale={12} size={2.0} speed={0.25} color="#FFE082" />

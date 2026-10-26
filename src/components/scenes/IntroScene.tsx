@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -123,16 +123,20 @@ export const IntroScene: React.FC<IntroSceneProps> = ({ onOpenComplete, onEnvelo
         <Canvas
           shadows
           dpr={[1, 1.5]}
-          gl={{ antialias: true, alpha: false }}
+          gl={{ antialias: true, alpha: true }}
           camera={{ position: [0, 0, isMobile ? 9.2 : 7], fov: isMobile ? 54 : 45 }}
         >
-          <DeskScene3D accentColor={accentColor} />
-          <Envelope3D
-            isOpen={isEnvelopeOpen}
-            onOpenTrigger={triggerOpen}
-            onProceed={handleProceed}
-            accentColor={accentColor}
-          />
+          <color attach="background" args={['#F8F1E7']} />
+          <fog attach="fog" args={['#F8F1E7', 8, 22]} />
+          <Suspense fallback={null}>
+            <DeskScene3D accentColor={accentColor} />
+            <Envelope3D
+              isOpen={isEnvelopeOpen}
+              onOpenTrigger={triggerOpen}
+              onProceed={handleProceed}
+              accentColor={accentColor}
+            />
+          </Suspense>
         </Canvas>
       </div>
 

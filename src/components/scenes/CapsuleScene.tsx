@@ -1,7 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { ToyRobot3D } from '../3d/ToyRobot3D';
+import { Dollar3D } from '../3d/Dollar3D';
 import { memoriesConfig } from '@/config/memories.config';
 import { SoundEngine } from '@/utils/audio';
 
@@ -17,7 +21,7 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
   onReplay,
 }) => {
   const [jarState, setJarState] = useState<'closed' | 'opening' | 'open'>('closed');
-  const [activeModal, setActiveModal] = useState<'memory' | 'question' | 'challenge' | 'secret' | null>(null);
+  const [activeModal, setActiveModal] = useState<'memory' | 'question' | 'challenge' | 'secret' | 'freedom' | null>(null);
   const [userAnswer, setUserAnswer] = useState('');
   const [isAnswerSaved, setIsAnswerSaved] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
@@ -96,6 +100,27 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
 
       {/* Main Glass Jar Container */}
       <div className="flex-grow w-full flex flex-col md:flex-row items-center justify-center relative select-none z-20 my-6">
+        {/* 3D Builder Robot Mascot on left side of jar */}
+        <div className="hidden lg:flex flex-col items-center justify-center mr-8 w-[160px] h-[200px] bg-white/5 border border-white/10 rounded-2xl p-2 relative backdrop-blur-xs">
+          <div className="text-[8px] font-mono text-cyan-400 text-center uppercase tracking-widest pb-1 border-b border-white/10 w-full">
+            Vault Guardian 🤖
+          </div>
+          <div className="w-full h-[calc(100%-16px)] relative">
+            <Canvas
+              shadows
+              dpr={[1, 1.5]}
+              gl={{ antialias: true, alpha: true }}
+              camera={{ position: [0, 0.4, 2.4], fov: 42 }}
+            >
+              <ambientLight intensity={1.2} />
+              <directionalLight position={[2, 4, 3]} intensity={1.5} />
+              <Suspense fallback={null}>
+                <ToyRobot3D position={[0, -0.2, 0]} scale={7.2} interactive={true} />
+              </Suspense>
+            </Canvas>
+          </div>
+        </div>
+
         {/* The Glass Jar SVG & Cork */}
         <motion.div
           className={`relative pointer-events-auto cursor-pointer aspect-[0.7/1] flex flex-col items-center justify-end pb-4 transition-all duration-300 ${
@@ -247,9 +272,31 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
               whileTap={{ scale: 0.95 }}
               className="bg-[#1F2937]/90 border border-zinc-700 p-4 rounded-xl shadow-lg flex flex-col items-center text-center cursor-pointer group"
             >
-              <span className="text-2xl mb-1 group-hover:scale-115 transition-transform">🍲</span>
-              <span className="font-handwritten text-base font-bold text-emerald-400">Secret Note</span>
-              <span className="text-[9px] font-sans text-zinc-400 mt-1 uppercase tracking-wider">Confession</span>
+              <span className="text-2xl mb-1 group-hover:scale-115 transition-transform">🤖</span>
+              <span className="font-handwritten text-base font-bold text-emerald-400">Secret Drawer</span>
+              <span className="text-[9px] font-sans text-zinc-400 mt-1 uppercase tracking-wider">Builder Bot</span>
+            </motion.button>
+
+            {/* Token 5: Financial Freedom */}
+            <motion.button
+              onClick={() => {
+                SoundEngine.playPopClick();
+                setActiveModal('freedom');
+              }}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              className="col-span-2 bg-[#1F2937]/90 border border-amber-500/30 p-3.5 rounded-xl shadow-lg flex items-center justify-between px-4 text-left cursor-pointer group hover:border-amber-400 transition-all"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-2xl group-hover:scale-115 transition-transform">💸</span>
+                <div>
+                  <span className="font-handwritten text-base font-bold text-amber-300 block leading-tight">Financial Freedom</span>
+                  <span className="text-[8.5px] font-sans text-zinc-400 uppercase tracking-wider">3D Compounding Token</span>
+                </div>
+              </div>
+              <span className="text-[9px] text-amber-400/90 font-mono font-semibold bg-amber-950/60 border border-amber-600/30 px-2 py-0.5 rounded-full">
+                View 3D ➔
+              </span>
             </motion.button>
           </motion.div>
         )}
@@ -317,13 +364,71 @@ export const CapsuleScene: React.FC<CapsuleSceneProps> = ({
                 </div>
               )}
 
-              {/* Modal 4: Secret Note */}
+              {/* Modal 4: Secret Note with 3D Robot */}
               {activeModal === 'secret' && (
                 <div className="flex flex-col items-center text-center">
-                  <span className="text-4xl mb-3">🍲</span>
-                  <h3 className="font-handwritten text-2xl font-bold text-emerald-400 mb-2">Secret Drawer Unlocked</h3>
-                  <p className="text-sm text-zinc-200 font-sans leading-relaxed my-2">{capsule.surprise.message}</p>
-                  <p className="font-handwritten text-sm text-zinc-400 mt-2">{capsule.futureNote.text}</p>
+                  <div className="w-full h-36 relative mb-2">
+                    <Canvas
+                      shadows
+                      dpr={[1, 1.5]}
+                      gl={{ antialias: true, alpha: true }}
+                      camera={{ position: [0, 0.4, 2.4], fov: 42 }}
+                    >
+                      <ambientLight intensity={1.2} />
+                      <directionalLight position={[2, 4, 3]} intensity={1.5} />
+                      <Suspense fallback={null}>
+                        <ToyRobot3D
+                          position={[0, -0.2, 0]}
+                          scale={7.5}
+                          interactive={true}
+                        />
+                        <OrbitControls
+                          enableZoom={false}
+                          maxPolarAngle={Math.PI / 1.8}
+                          minPolarAngle={Math.PI / 3}
+                        />
+                      </Suspense>
+                    </Canvas>
+                  </div>
+                  <h3 className="font-handwritten text-2xl font-bold text-emerald-400 mb-1">Builder Companion Unlocked 🤖</h3>
+                  <p className="text-sm text-zinc-200 font-sans leading-relaxed my-1.5">{capsule.surprise.message}</p>
+                  <p className="font-handwritten text-xs text-zinc-400 mt-2">{capsule.futureNote.text}</p>
+                  <span className="text-[8.5px] font-mono text-zinc-500 mt-2">[ Click robot to make it spin & wave! ]</span>
+                </div>
+              )}
+
+              {/* Modal 5: Financial Freedom with 3D Dollar */}
+              {activeModal === 'freedom' && (
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-full h-36 relative mb-2">
+                    <Canvas
+                      shadows
+                      dpr={[1, 1.5]}
+                      gl={{ antialias: true, alpha: true }}
+                      camera={{ position: [0, 0.4, 2.0], fov: 42 }}
+                    >
+                      <ambientLight intensity={1.5} />
+                      <directionalLight position={[2, 4, 3]} intensity={2.0} />
+                      <Suspense fallback={null}>
+                        <Dollar3D
+                          position={[0, -0.05, 0]}
+                          rotation={[0.65, 0.35, -0.1]}
+                          scale={1.5}
+                          interactive={true}
+                        />
+                        <OrbitControls
+                          enableZoom={false}
+                          maxPolarAngle={Math.PI / 1.8}
+                          minPolarAngle={Math.PI / 3}
+                        />
+                      </Suspense>
+                    </Canvas>
+                  </div>
+                  <h3 className="font-handwritten text-2xl font-bold text-amber-300 mb-1">Financial Freedom & Wisdom 💸</h3>
+                  <p className="text-sm text-zinc-200 font-sans leading-relaxed my-1.5">
+                    &quot;Quiet discipline over loud luxury. Save consistently, build high-leverage skills, and let patience do the heavy lifting.&quot;
+                  </p>
+                  <span className="text-[8.5px] font-mono text-amber-400/80 mt-2">[ Click dollar bill to flip 360° ]</span>
                 </div>
               )}
 

@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
+import { ToyPlane3D } from '../3d/ToyPlane3D';
 import { memoriesConfig } from '@/config/memories.config';
 import { SoundEngine } from '@/utils/audio';
 import { WashiTape } from '../WashiTape';
@@ -25,7 +27,7 @@ export const JourneyScene: React.FC<JourneySceneProps> = ({ onContinue, onBack }
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-paper overflow-hidden flex flex-col justify-between items-center py-6 px-4 md:py-10 md:px-8 select-none">
+    <div className="relative w-full min-h-screen bg-paper overflow-x-hidden overflow-y-auto md:overflow-hidden flex flex-col justify-between items-center py-6 px-4 md:py-10 md:px-8 select-none">
       {/* Background Soft Drift */}
       <div
         className="absolute inset-0 pointer-events-none z-0 mix-blend-multiply opacity-25"
@@ -45,6 +47,32 @@ export const JourneyScene: React.FC<JourneySceneProps> = ({ onContinue, onBack }
         <p className="font-sans text-xs md:text-sm font-bold uppercase tracking-wider text-text-ink/60 mt-1">
           {journey.subtitle}
         </p>
+      </div>
+
+      {/* 3D Toy Airplane Flight Waypoint Navigator */}
+      <div className="w-full max-w-4xl h-[120px] mx-auto z-20 relative pointer-events-auto">
+        <div className="absolute top-1 right-4 text-[9px] font-mono text-zinc-400 bg-white/70 px-2.5 py-0.5 rounded-full border border-zinc-200/60 shadow-xs z-30 hidden sm:block">
+          ✈️ 3D Flight Navigator • Click plane or stop to fly
+        </div>
+        <Canvas
+          shadows
+          dpr={[1, 1.5]}
+          gl={{ antialias: true, alpha: true }}
+          camera={{ position: [0, 1.2, 5.5], fov: 42 }}
+        >
+          <ambientLight intensity={1.2} />
+          <directionalLight position={[3, 6, 4]} intensity={1.5} />
+          <Suspense fallback={null}>
+            <ToyPlane3D
+              position={[0, 0, 0]}
+              rotation={[0.1, 0, 0]}
+              targetX={(selectedMilestoneIdx - 2) * 2.1}
+              scale={16}
+              interactive={true}
+              onClick={() => handleSelect((selectedMilestoneIdx + 1) % milestones.length)}
+            />
+          </Suspense>
+        </Canvas>
       </div>
 
       {/* Timeline Milestone Navigation Bar */}

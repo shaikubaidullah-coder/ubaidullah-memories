@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, SkipForward, SkipBack, RotateCw, Volume2, Music, Sparkles } from 'lucide-react';
+import { Play, Pause, SkipForward, SkipBack, RotateCw, Volume2, Music, Sparkles, Radio as RadioIcon } from 'lucide-react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { Radio3D } from '../3d/Radio3D';
 import { memoriesConfig } from '@/config/memories.config';
 import { SoundEngine } from '@/utils/audio';
 import { useMusic } from '@/context/MusicContext';
@@ -37,7 +40,7 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-paper overflow-hidden flex flex-col justify-between items-center py-6 px-4 md:py-10 md:px-8 select-none">
+    <div className="relative w-full min-h-screen bg-paper overflow-x-hidden overflow-y-auto md:overflow-hidden flex flex-col justify-between items-center py-6 px-4 md:py-10 md:px-8 select-none">
       {/* Background Ambience */}
       <div
         className="absolute inset-0 pointer-events-none z-0 mix-blend-multiply opacity-20"
@@ -57,6 +60,48 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
         <p className="font-sans text-xs md:text-sm font-bold uppercase tracking-wider text-text-ink/60 mt-1">
           {mixtape.subtitle}
         </p>
+      </div>
+
+      {/* Interactive 3D Vintage Radio Deck */}
+      <div className="w-full max-w-md mx-auto z-20 mt-3 mb-1 px-4">
+        <div className="w-full h-[155px] bg-white/75 backdrop-blur-xs border border-[#DFD8C4] rounded-2xl p-2 shadow-md relative">
+          <div className="flex justify-between items-center px-2 pb-1 border-b border-zinc-100 text-[9px] font-mono text-zinc-500">
+            <span className="font-bold flex items-center gap-1.5 text-zinc-800">
+              <RadioIcon className="w-3.5 h-3.5 text-accent-pink" /> 3D Vintage Boombox
+            </span>
+            <span className="text-[7.5px] font-semibold text-amber-700 bg-amber-50 border border-amber-200/60 px-2 py-0.5 rounded-full">
+              {isPlaying ? '● On Air (AUR Live)' : '○ Standby • Tap to Tune'}
+            </span>
+          </div>
+          <div className="w-full h-[calc(100%-20px)] relative">
+            <Canvas
+              shadows
+              dpr={[1, 1.5]}
+              gl={{ antialias: true, alpha: true }}
+              camera={{ position: [0, 0.6, 2.4], fov: 38 }}
+            >
+              <ambientLight intensity={1.2} />
+              <directionalLight position={[3, 5, 4]} intensity={1.6} />
+              <Suspense fallback={null}>
+                <Radio3D
+                  position={[0, -0.65, 0]}
+                  rotation={[0, 0, 0]}
+                  scale={0.82}
+                  interactive={true}
+                  isPlaying={isPlaying}
+                  onTune={nextSong}
+                />
+                <OrbitControls
+                  enableZoom={false}
+                  maxPolarAngle={Math.PI / 2}
+                  minPolarAngle={Math.PI / 4}
+                  maxAzimuthAngle={Math.PI / 3}
+                  minAzimuthAngle={-Math.PI / 3}
+                />
+              </Suspense>
+            </Canvas>
+          </div>
+        </div>
       </div>
 
       {/* Main Interactive Cassette Deck & Tracklist */}

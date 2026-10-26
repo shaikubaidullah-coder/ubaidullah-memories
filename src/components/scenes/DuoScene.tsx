@@ -38,7 +38,7 @@ export const DuoScene: React.FC<DuoSceneProps> = ({ onContinue }) => {
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-paper overflow-hidden flex flex-col justify-start items-center py-6 px-4 md:py-10 md:px-8 select-none">
+    <div className="relative w-full min-h-screen bg-paper overflow-x-hidden overflow-y-auto md:overflow-hidden flex flex-col justify-start items-center py-6 px-4 md:py-10 md:px-8 select-none">
       {/* White Entry Flash Fade */}
       <motion.div
         className="fixed inset-0 bg-white z-[90] pointer-events-none"
@@ -324,6 +324,21 @@ export const DuoScene: React.FC<DuoSceneProps> = ({ onContinue }) => {
                 />
               ))}
             </div>
+          )}
+
+          {/* Mobile handwritten reminder note */}
+          {isMobile && (
+            <motion.div
+              className="mt-5 bg-[#FAF8F5] border border-[#E5DEC9] shadow-xs p-3 rounded-xs rotate-[-2deg] max-w-[220px] mx-auto text-center cursor-pointer pointer-events-auto"
+              onClick={() => SoundEngine.playPaperRustle()}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <div className="w-6 h-3 bg-yellow-200/50 mx-auto -mt-4 mb-1 rotate-[2deg] border border-yellow-300/20" />
+              <p className="font-handwritten text-xs text-text-ink/85 leading-relaxed whitespace-pre-line">
+                {stickyNoteText}
+              </p>
+            </motion.div>
           )}
         </div>
 
