@@ -124,7 +124,7 @@ export const DuoScene: React.FC<DuoSceneProps> = ({ onContinue }) => {
         }}
       >
         {/* Title Header */}
-        <div className="w-full max-w-lg text-center mt-2 md:mt-4 z-30">
+        <div className="w-full max-w-lg text-center mt-8 md:mt-4 px-6 md:px-0 z-30">
           <motion.h1
             className="font-handwritten text-3xl md:text-5xl font-black tracking-tight text-accent-pink"
             initial={{ y: -20, opacity: 0 }}

@@ -140,7 +140,7 @@ export const LanternsScene: React.FC<LanternsSceneProps> = ({ onContinue, onBack
       </Canvas>
 
       {/* Header Overlay */}
-      <div className="absolute top-8 left-0 right-0 text-center pointer-events-none z-20">
+      <div className="absolute top-12 md:top-8 left-0 right-0 px-6 md:px-0 text-center pointer-events-none z-20">
         <span className="font-handwritten text-lg text-accent-yellow tracking-wider font-extrabold uppercase select-none block mb-1">
           wishing stars
         </span>

@@ -95,7 +95,7 @@ export const MemoriesScene: React.FC<MemoriesSceneProps> = ({ onContinue, onRepl
       `}</style>
 
       {/* Header */}
-      <div className="w-full max-w-lg text-center mt-2 z-30 pointer-events-none">
+      <div className="w-full max-w-lg text-center mt-8 md:mt-2 px-6 md:px-0 z-30 pointer-events-none">
         <h1 className="font-handwritten text-3xl md:text-5xl font-black tracking-tight text-text-ink/90">
           {desk.title}
         </h1>

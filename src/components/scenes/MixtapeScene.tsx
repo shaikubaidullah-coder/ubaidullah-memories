@@ -50,7 +50,7 @@ export const MixtapeScene: React.FC<MixtapeSceneProps> = ({ onContinue, onBack }
       />
 
       {/* Header */}
-      <div className="w-full max-w-lg text-center mt-2 z-20 pointer-events-none">
+      <div className="w-full max-w-lg text-center mt-8 md:mt-2 px-6 md:px-0 z-20 pointer-events-none">
         <span className="font-handwritten text-lg text-accent-pink tracking-wider font-extrabold uppercase select-none block mb-1">
           retro cassette vault
         </span>
